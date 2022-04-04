@@ -1,0 +1,551 @@
+{
+	"info": {
+		"_postman_id": "3fe108b5-d162-4005-834e-e21fe7942f9b",
+		"name": "ContosoAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token - Client Credentials Flow",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var obj = pm.response.json();\r",
+							"pm.environment.set(\"token\", obj.access_token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{ClientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{ClientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "api://contoso-pest-control-api/.default",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.microsoftonline.com/{{TenantId}}/oauth2/v2.0/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"microsoftonline",
+						"com"
+					],
+					"path": [
+						"{{TenantId}}",
+						"oauth2",
+						"v2.0",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid')\r",
+							"var customerId = uuid.v4();\r",
+							"var serviceLocatationId = uuid.v4();\r",
+							"pm.environment.set('CustomerId', customerId);\r",
+							"pm.environment.set('ServiceLocationId', serviceLocatationId);\r",
+							"pm.environment.set(\"Subject\", 'One wasp found in kitchen area');\r",
+							"pm.environment.set(\"Details\", 'This is happening for the last 2 days. Please help!');"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).is.not.null;\r",
+							"    pm.environment.set(\"IssueId\", responseJson.id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customerId\": \"{{CustomerId}}\",\r\n  \"serviceLocationId\": \"{{ServiceLocationId}}\",\r\n  \"subject\": \"{{Subject}}\",\r\n  \"details\": \"{{Details}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/issue",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).is.eq(pm.environment.get('IssueId'));\r",
+							"    pm.expect(responseJson.subject).is.eq(pm.environment.get('Subject'));\r",
+							"    pm.expect(responseJson.details).is.eq(pm.environment.get('Details'));\r",
+							"    pm.expect(responseJson.serviceLocationId).is.eq(pm.environment.get('ServiceLocationId'));\r",
+							"    pm.expect(responseJson.resolutionDetailId).is.null;\r",
+							"    pm.expect(responseJson.resolved).is.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"Subject\", '6 wasps are found in kitchen area');\r",
+							"pm.environment.set(\"Details\", 'Just come. Please help!');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"subject\": \"{{Subject}}\",\r\n    \"details\": \"{{Details}}\"    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Issue Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).is.eq(pm.environment.get('IssueId'));\r",
+							"    pm.expect(responseJson.subject).is.eq(pm.environment.get('Subject'));\r",
+							"    pm.expect(responseJson.details).is.eq(pm.environment.get('Details'));\r",
+							"    pm.expect(responseJson.serviceLocationId).is.eq(pm.environment.get('ServiceLocationId'));\r",
+							"    pm.expect(responseJson.resolutionDetailId).is.null;\r",
+							"    pm.expect(responseJson.resolved).is.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resolve Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid')\r",
+							"var resolutionDetailId = uuid.v4();\r",
+							"pm.environment.set(\"ResolutionDetailId\", resolutionDetailId);\r",
+							"\r",
+							"var moment = require('moment');\r",
+							"var resolved = moment.utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]');\r",
+							"pm.environment.set(\"Resolved\", resolved);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resolutionDetailId\": \"{{ResolutionDetailId}}\",\r\n    \"resolved\": \"{{Resolved}}\"    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}/resolution",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}",
+						"resolution"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Issue Resolved",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).is.eq(pm.environment.get('IssueId'));\r",
+							"    pm.expect(responseJson.subject).is.eq(pm.environment.get('Subject'));\r",
+							"    pm.expect(responseJson.details).is.eq(pm.environment.get('Details'));\r",
+							"    pm.expect(responseJson.serviceLocationId).is.eq(pm.environment.get('ServiceLocationId'));\r",
+							"    pm.expect(responseJson.resolutionDetailId).is.eq(pm.environment.get('ResolutionDetailId'));\r",
+							"    pm.expect(pm.environment.get('Resolved').startsWith(responseJson.resolved)).is.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Issue 2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid')\r",
+							"var customerId = uuid.v4();\r",
+							"var serviceLocatationId = uuid.v4();\r",
+							"pm.environment.set('CustomerId', customerId);\r",
+							"pm.environment.set('ServiceLocationId', serviceLocatationId);\r",
+							"pm.environment.set(\"Subject\", 'One wasp found in kitchen area');\r",
+							"pm.environment.set(\"Details\", 'This is happening for the last 2 days. Please help!');"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).is.not.null;\r",
+							"    pm.environment.set(\"IssueId\", responseJson.id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customerId\": \"{{CustomerId}}\",\r\n  \"serviceLocationId\": \"{{ServiceLocationId}}\",\r\n  \"subject\": \"{{Subject}}\",\r\n  \"details\": \"{{Details}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/issue",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Issue 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Issue 2 is NOT FOUND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BaseUrl}}/issue/{{IssueId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"issue",
+						"{{IssueId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

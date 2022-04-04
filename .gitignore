@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Ignore appsettings
+appsettings*
+/src/ContosoPestControl.Issue/secrets.json
