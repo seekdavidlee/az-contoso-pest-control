@@ -24,6 +24,7 @@ After discussion internally, this is our proposed architecture which speaks to s
 3. We will host a health check endpoint and this will allow host services to ensure the microservice is healthy or drop it and create a new instance. This will also ensure host services with capabilities to report issues to trigger any alerts.
 4. We will use RESTful conventions which means POST to create, PUT to update, GET to get resources with specific routes and DELETE to remove a resource.
 5. We will attempt to use a [sidecar pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/sidecar) to access dependencies so that we can abstract ourselves away from concrete implementation details. The only exception is the database access because we expect our ORM (Object-Relational-Mapping) library to take care of the dependency abstraction. This point speaks to the Pub/Sub service layer which will leverage this pattern.
+6. We will ensure that we enable appropriate logging which will ensure Developers to be able to debug and troubleshooot quickly and effectively. 
 
 ![Architecture](/src/ContosoPestControl.Issue/Architecture/Contoso-Pest-Control-Microservice.png)
 
@@ -45,10 +46,11 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$Password" -p 1433:1433 --name sql
 6. For the sidecar pattern, we will be leveraging [DPAR (Distributed Application Runtime)](https://docs.dapr.io/getting-started/install-dapr-cli/). We plan to leverage Azure Service Bus for Pub/Sub to minimize the amount of effort to stand up Pub/Sub components. With DPAR, there should only be [simple YAML configuration](https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-azure-servicebus/) we need to follow.
 7. We will use the [built-in health check](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0) interface and libary which will minimize any custom implementation work.
 8. We will use the [built-in swagger](https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-6.0) which will minimize any custom implementation work.
-9. Testing ensures our code remains reliable with any new changes. For testing:
+9. We will leverage the ILogger interface which allows us to track log messages for the purpose of debugging and troubleshoot any exceptions and stack strace.  
+10. Testing ensures our code remains reliable with any new changes. For testing:
     * We will use MS Test for writing unit tests to ensure our business logic does not break.
     * We will use POSTMAN for local end-to-end tests to ensure dependencies continue to work as dependencies themselves may have breaking changes that we may not be aware of. POSTMAN will allow us to write tests as well as have a nice output showing test results as part of our DevOps CI process.
-10. We will use GitHub as our GIT repository and will follow best practices such as branching where main represents production code and other branches are either feature or bug fixes. We will use Pull Requests for merging code into main. There are plans to use GitHub actions later for building up our CI/CD workflows.
+11. We will use GitHub as our GIT repository and will follow best practices such as branching where main represents production code and other branches are either feature or bug fixes. We will use Pull Requests for merging code into main. There are plans to use GitHub actions later for building up our CI/CD workflows.
 
 ## Local Dev Setup
 We are now ready to showcase what we have done and hand over the work the IT Team devs. Here are the steps we have documented.
