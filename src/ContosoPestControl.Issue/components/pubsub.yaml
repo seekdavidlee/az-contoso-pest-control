@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: contoso-issue-ms-sender
+  namespace: default
+spec:
+  type: pubsub.azure.servicebus
+  version: v1
+  metadata:
+  - name: connectionString # Required
+    secretKeyRef:
+      name: contoso-issue-ms-sender-connectionString
+      key: contoso-issue-ms-sender-connectionString
+  - name: disableEntityManagement # Optional
+    value: "true"
+auth:
+  secretStore: contoso-secret-store
