@@ -30,7 +30,7 @@ jobs:
   build_deploy:
     name: Build and Deploy 
     needs: setup   
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     environment: ${{ needs.setup.outputs.build_env }}
     steps:
       - uses: actions/checkout@v2
