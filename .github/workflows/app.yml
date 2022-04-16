@@ -27,10 +27,10 @@ jobs:
       build_env: ${{ steps.setup.outputs.build_env }}
       app_version: ${{ steps.setup.outputs.app_version }}
 
-  build_deploy:
-    name: Build and Deploy 
+  build_test:
+    name: Build and run tests
     needs: setup   
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     environment: ${{ needs.setup.outputs.build_env }}
     steps:
       - uses: actions/checkout@v2
@@ -57,6 +57,14 @@ jobs:
         with:
           version: 'v10'
 
+  push_build:
+    name: Push to Container Registry
+    needs: 
+      - setup
+      - build_test
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.build_env }}
+    steps:    
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
