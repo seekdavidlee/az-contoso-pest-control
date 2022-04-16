@@ -3,8 +3,10 @@ on:
     paths-ignore: 
       - 'README.md'
 env:
-  APP_VERSION: 'v5.1'
+  APP_VERSION: 'v0.1'
   SRC_PATH: 'src\ContosoPestControl.'
+  REGISTRY: ghcr.io
+  ISSUE_IMAGE_NAME: contoso-pest-control-issue
 
 jobs:
   setup:
@@ -16,16 +18,20 @@ jobs:
         run: |
             if ('${{ github.ref }}' -eq 'refs/heads/main') { 
               echo "::set-output name=build_env::prod"
+              echo "::set-output name=app_version::${{ env.APP_VERSION }}"
             } else {
               echo "::set-output name=build_env::dev"
+              echo "::set-output name=app_version::${{ env.APP_VERSION }}dev"
             }
     outputs:
       build_env: ${{ steps.setup.outputs.build_env }}
+      app_version: ${{ steps.setup.outputs.app_version }}
 
   build_deploy:
     name: Build and Deploy 
     needs: setup   
-    runs-on: windows-latest  
+    runs-on: windows-latest
+    environment: ${{ needs.setup.outputs.build_env }}
     steps:
       - uses: actions/checkout@v2
 
@@ -50,3 +56,18 @@ jobs:
       - uses: kheiakiyama/install-azcopy-action@v1
         with:
           version: 'v10'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action
+        working-directory: ${{ env.SRC_PATH }}Issue
+        with:
+          context: .
+          push: true
+          tags: ${{ needs.setup.outputs.app_version }}
