@@ -1,0 +1,87 @@
+on: 
+  push:
+    paths-ignore: 
+      - 'README.md'
+env:
+  APP_VERSION: 'v0.1'
+  SRC_PATH: 'src/ContosoPestControl.'
+  REGISTRY: ghcr.io
+  ISSUE_IMAGE_NAME: contoso-pest-control-issue
+
+jobs:
+  setup:
+    name: Choose Secrets Environment Job
+    runs-on: windows-latest
+    steps:
+      - id: setup
+        name: Setup Environment Setp
+        run: |
+            if ('${{ github.ref }}' -eq 'refs/heads/main') { 
+              echo "::set-output name=build_env::prod"
+              echo "::set-output name=app_version::${{ env.APP_VERSION }}"
+            } else {
+              echo "::set-output name=build_env::dev"
+              echo "::set-output name=app_version::${{ env.APP_VERSION }}dev"
+            }
+    outputs:
+      build_env: ${{ steps.setup.outputs.build_env }}
+      app_version: ${{ steps.setup.outputs.app_version }}
+
+  build_test:
+    name: Build and run tests
+    needs: setup   
+    runs-on: windows-latest
+    environment: ${{ needs.setup.outputs.build_env }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - id: integrationtest
+        name: Integration Tests
+        working-directory: ${{ env.SRC_PATH }}Tests
+        run: |
+            $unitTestFilePath = "${{ env.RUNNER_TEMP }}\TestResults\unittests.xml"            
+            dotnet test --logger "junit;LogFilePath=$unitTestFilePath"
+
+      - name: Publish test results
+        if: ${{ always() }}
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        with:
+          files: ${{ env.RUNNER_TEMP }}/TestResults/*.xml
+
+      - uses: kheiakiyama/install-azcopy-action@v1
+        with:
+          version: 'v10'
+
+  push_build:
+    name: Push to Container Registry
+    needs: 
+      - setup
+      - build_test
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.build_env }}
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+    
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}       
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2      
+        with:
+          context: ./src
+          file: ./${{ env.SRC_PATH }}Issue/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.ISSUE_IMAGE_NAME }}/${{ needs.setup.outputs.app_version }}
