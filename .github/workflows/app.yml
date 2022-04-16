@@ -65,9 +65,8 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        working-directory: ${{ env.SRC_PATH }}Issue
+        uses: docker/build-push-action@v2        
         with:
-          context: .
+          context: ${{ env.SRC_PATH }}Issue          
           push: true
           tags: ${{ env.ISSUE_IMAGE_NAME }}/${{ needs.setup.outputs.app_version }}
