@@ -4,7 +4,7 @@ on:
       - 'README.md'
 env:
   APP_VERSION: 'v5.1'
-  SRC_PATH: 'src/ContosoPestControl.'
+  SRC_PATH: 'src\ContosoPestControl.'
 
 jobs:
   setup:
@@ -36,7 +36,7 @@ jobs:
 
       - id: integrationtest
         name: Integration Tests
-        working-directory: ${{ env.SRC_PATH }}.Tests
+        working-directory: ${{ env.SRC_PATH }}Tests
         run: |
             $unitTestFilePath = "${{ env.RUNNER_TEMP }}\TestResults\unittests.xml"            
             dotnet test --logger "junit;LogFilePath=$unitTestFilePath"
