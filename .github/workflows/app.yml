@@ -1,0 +1,52 @@
+on: 
+  push:
+    paths-ignore: 
+      - 'README.md'
+env:
+  APP_VERSION: 'v5.1'
+  SRC_PATH: 'src/ContosoPestControl.'
+
+jobs:
+  setup:
+    name: Choose Secrets Environment Job
+    runs-on: windows-latest
+    steps:
+      - id: setup
+        name: Setup Environment Setp
+        run: |
+            if ('${{ github.ref }}' -eq 'refs/heads/main') { 
+              echo "::set-output name=build_env::prod"
+            } else {
+              echo "::set-output name=build_env::dev"
+            }
+    outputs:
+      build_env: ${{ steps.setup.outputs.build_env }}
+
+  build_deploy:
+    name: Build and Deploy 
+    needs: setup   
+    runs-on: windows-latest  
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - id: integrationtest
+        name: Integration Tests
+        working-directory: ${{ SRC_PATH }}.Tests
+        run: |
+            $unitTestFilePath = "${{ env.RUNNER_TEMP }}\TestResults\unittests.xml"            
+            dotnet test --logger "junit;LogFilePath=$unitTestFilePath"
+
+      - name: Publish test results
+        if: ${{ always() }}
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        with:
+          files: ${{ env.RUNNER_TEMP }}/TestResults/*.xml
+
+      - uses: kheiakiyama/install-azcopy-action@v1
+        with:
+          version: 'v10'
