@@ -1,5 +1,5 @@
 # Introduction
-Contoso Pest Control is pest control company that has been in business for over 25 years and prides itself on using natural products for most of the treatments to protect the health of its customers and environment. Contoso Pest Control serves major metropolitan areas in the US.
+Contoso Pest Control is fictitious pest control company that has been in business for over 25 years and prides itself on using natural products for most of the treatments to protect the health of its customers and environment. Contoso Pest Control serves major metropolitan areas in the US.
 
 ## Background
 About 10 years ago, the company started a website which is hosted in a Co-Located Data Center where:
