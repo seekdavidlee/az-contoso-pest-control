@@ -11,7 +11,7 @@ var drNetworkPrefix = toLower('${prefix}-${dr_location}')
 var tags = {
   'stack-name': 'networking'
   'stack-environment': stackEnvironment
-  'stack-owner': 'networking'
+  'stack-owner': 'networking@contoso.com'
 }
 
 var subnets = [

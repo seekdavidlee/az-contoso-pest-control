@@ -51,5 +51,9 @@ DeployBlueprint.ps1 -SVC_PRINCIPAL_ID <Object Id for Contoso Pest Control GitHub
 az deployment group create -n deploy-1 -g cpc-networking-dev --template-file deployment/networking.bicep --parameters stackEnvironment=dev sourceIp=$allowedIP
 ```
 
+## Troubleshooting
+1. When running the blueprint, you may encounter an error saying the resource name is already in use. If so, you need to rollback all blueprint assignments and blueprints, remove the resource group and provide a Prefix parameter with a different name. For example, use ```cpc123 ``` as the default is ``` cpc ```.
+2. If you encounter an error related to resource is in a updated state when running the networking bicep deployment, you may need to wait several minutes before re-running the same command again with a different deployment name.
+
 ## Next Step
 [Sprint 3: Setting up DevOps CI (Continuous Integration) with Unit Testing and pushing container builds into Azure Container Registry (ACR) with GitHub Actions](../docs/SPRINT3.md)
