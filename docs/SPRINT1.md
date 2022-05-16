@@ -6,7 +6,7 @@ To follow along, checkout the following.
 git checkout tags/sprint1 -b sprint1
 ```
 
-# Microservice Architecture
+# Architecture
 After discussion internally, this is our proposed architecture which speaks to some of the best practices for hosting microservices on the cloud.
 
 1. We will ensure the microservice is stateless in nature which means avoiding authentication cookies and other stateful implementations. For example, in concrete terms, the use of OAuth Bearer token will ensure our microservice remains stateless as each HTTP request would carry that token from a security perspective.
@@ -42,7 +42,7 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$Password" -p 1433:1433 --name sql
     * We will use POSTMAN for local end-to-end tests to ensure dependencies continue to work as dependencies themselves may have breaking changes that we may not be aware of. POSTMAN will allow us to write tests as well as have a nice output showing test results as part of our DevOps CI process.
 11. We will use GitHub as our GIT repository and will follow best practices such as branching where main represents production code and other branches are either feature or bug fixes. We will use Pull Requests for merging code into main. There are plans to use GitHub actions later for building up our CI/CD workflows.
 
-## Local Dev Setup
+### Local Dev Setup
 We are now ready to showcase what we have done and hand over the work the IT Team devs. Here are the steps we have documented.
 
 1. git clone this repo locally and create a branch
@@ -91,4 +91,4 @@ We are now ready to showcase what we have done and hand over the work the IT Tea
 12. We can run stop everything and run the following to execute the unit tests under the Test project path. ``` dotnet test ```
 
 ## Next Step
-[Sprint 2: Establishing Governance practice (such as Networking, RBAC) with Azure Blueprint in Azure Subscription](docs/SPRINT2.md)
+[Sprint 2: Establishing Governance practice (such as Networking, RBAC) with Azure Blueprint in Azure Subscription](../docs/SPRINT2.md)
