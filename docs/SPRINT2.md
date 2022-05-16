@@ -3,7 +3,7 @@ The second sprint is focused on establishing governance practices (such as manag
 
 To follow along, checkout the following.
 ```
-git checkout tags/sprint1 -b sprint2
+git checkout tags/sprint2 -b sprint2
 ```
 
 # Architecture
