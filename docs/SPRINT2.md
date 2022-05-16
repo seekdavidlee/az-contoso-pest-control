@@ -35,7 +35,7 @@ az ad sp show --id <appId from the previous command> --query "objectId" | Conver
 3. We need to create a group for all Platform team members in Azure Active Directory. Use the command above to get the Id.
 4. We should cd into the blueprint directory and execute our blueprint.bicep with the following command.
 ```
-DeployBlueprint.ps1 -SVC_PRINCIPAL_ID <Object Id for Contoso Pest Control GitHub Service Principal> -MY_PRINCIPAL_ID <Object Id for your group>
+DeployBlueprint.ps1 -SVC_PRINCIPAL_ID <Object Id for Contoso Pest Control GitHub Service Principal> -PLAT_PRINCIPAL_ID <Object Id for your group>
 ```
 5. When this is completed, login to the Azure Portal to review the results of the Azure Blueprint deployment. If there is an issue, we can always remove the assignment, update the defination and rerun. The version should still be incremented.
 6. We will also need to make sure the appropriate Azure Resources are created with the expected role assignments.
