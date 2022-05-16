@@ -1,5 +1,5 @@
 # Introduction
-The second sprint is focused on setting up Governance around Contoso's Azure Subscription.
+The second sprint is focused on establishing governance practices (such as managing shared resources, Networking, RBAC) with Azure Blueprint in Azure Subscription.
 
 To follow along, checkout the following.
 ```
