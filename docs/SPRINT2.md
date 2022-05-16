@@ -24,22 +24,29 @@ We will create an Azure Blueprint to define the resource groups, role assignment
 ## Implementation
 We have decided on using Bicep as the language for creating our Azure Blueprint (VS using ARM Template which is a JSON syntax). This will make it easier for our engineers as it is much more readable. We have also decide to go with using Azure CLI for the scripting portion as it appears to be more robust with the number of Azure Services it can be used with and it has a better tooling around output format (VS Azure PowerShell). That said, we are ready with the implementations steps!
 
-1. The first step is to create a Service Principal which is assigned into each resource group. Take note of the tenant Id, appId and password.
+1. Ensure you have the latest version of bicep.
+```
+az bicep upgrade
+```
+2. The first step is to create a Service Principal which is assigned into each resource group. Take note of the tenant Id, appId and password.
 ```
 az ad sp create-for-rbac -n "Contoso Pest Control GitHub"
 ``` 
-2. We need to get the Object Id for the Service principal we have created. This is used as input to our Blueprint deployment later.
+3. We need to get the Object Id for the Service principal we have created. This is used as input to our Blueprint deployment later as the SVC_PRINCIPAL_ID parameter.
 ```
 az ad sp show --id <appId from the previous command> --query "objectId" | ConvertFrom-Json
 ```
-3. We need to create a group for all Platform team members in Azure Active Directory. Use the command above to get the Id.
-4. We should cd into the blueprint directory and execute our blueprint.bicep with the following command.
+4. We need to create a group for all Platform team members in Azure Active Directory. If it is just yourself, you can use the command below for the PLAT_PRINCIPAL_ID parameter used later.
+```
+az ad signed-in-user show --query 'objectId' | ConvertFrom-Json
+```
+5. We should cd into the blueprint directory and execute our blueprint.bicep with the following command.
 ```
 DeployBlueprint.ps1 -SVC_PRINCIPAL_ID <Object Id for Contoso Pest Control GitHub Service Principal> -PLAT_PRINCIPAL_ID <Object Id for your group>
 ```
-5. When this is completed, login to the Azure Portal to review the results of the Azure Blueprint deployment. If there is an issue, we can always remove the assignment, update the defination and rerun. The version should still be incremented.
-6. We will also need to make sure the appropriate Azure Resources are created with the expected role assignments.
-7. Lastly, we run the following command to deploy our networking resources in this Sprint. We expect to ensure it is part of the CD process later in [sprint 4](docs/SPRINT4.md). Notice we have selected to deploy to our dev environment which is why we are using the dev resource group and stackEnvironment as dev. Also be sure to set your source IP which is to represent your office location.
+6. When this is completed, login to the Azure Portal to review the results of the Azure Blueprint deployment. If there is an issue, we can always remove the assignment, update the defination and rerun. The version should still be incremented.
+7. We will also need to make sure the appropriate Azure Resources are created with the expected role assignments.
+8. Lastly, we run the following command to deploy our networking resources in this Sprint. We expect to ensure it is part of the CD process later in [sprint 4](docs/SPRINT4.md). Notice we have selected to deploy to our dev environment which is why we are using the dev resource group and stackEnvironment as dev. Also be sure to set your source IP which is to represent your office location.
 ```
 az deployment group create -n deploy-1 -g cpc-networking-dev --template-file deployment/networking.bicep --parameters stackEnvironment=dev sourceIp=$allowedIP
 ```
