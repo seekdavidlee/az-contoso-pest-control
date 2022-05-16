@@ -47,5 +47,5 @@ jobs:
           .\Deployment\Build.ps1 -APP_NAME ${{ env.issueAppName }} `
             -APP_VERSION ${{ env.issueAppVersion }} `
             -BUILD_ENV ${{ env.buildEnv }} `
-            -BUILD_PATH src/ContosoPestControl.Issue `
+            -BUILD_PATH ContosoPestControl.Issue `
             -WORKING_DIR src
