@@ -45,4 +45,4 @@ az deployment group create -n deploy-1 -g cpc-networking-dev --template-file dep
 ```
 
 ## Next Step
-[Sprint 3: Setting up DevOps CI (Continuous Integration) with Unit Testing and pushing container builds into Azure Container Registry (ACR) with GitHub Actions](docs/SPRINT3.md)
+[Sprint 3: Setting up DevOps CI (Continuous Integration) with Unit Testing and pushing container builds into Azure Container Registry (ACR) with GitHub Actions](../docs/SPRINT3.md)

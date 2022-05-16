@@ -91,4 +91,4 @@ We are now ready to showcase what we have done and hand over the work the IT Tea
 12. We can run stop everything and run the following to execute the unit tests under the Test project path. ``` dotnet test ```
 
 ## Next Step
-[Sprint 2: Establishing Governance practice (such as Networking, RBAC) with Azure Blueprint in Azure Subscription](docs/SPRINT2.md)
+[Sprint 2: Establishing Governance practice (such as Networking, RBAC) with Azure Blueprint in Azure Subscription](../docs/SPRINT2.md)

@@ -40,7 +40,7 @@ var rgs = [
     tags: {
       'stack-name': 'api'
       'stack-environment': stackEnvironment
-      'stack-owner': 'devteam1'
+      'stack-owner': 'devteam1@contoso.com'
     }
     createManagedIdentity: false
     allResourcesDoNotDeleteInDev: true
