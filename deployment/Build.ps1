@@ -1,4 +1,4 @@
-param($APP_NAME, $APP_VERSION, $BUILD_ENV, $BUILD_PATH)
+param($APP_NAME, $APP_VERSION, $BUILD_ENV, $BUILD_PATH, $WORKING_DIR)
 
 $ErrorActionPreference = "Stop"
 
@@ -30,6 +30,9 @@ if ($tags) {
 }
 
 if ($shouldBuild -eq $true) {
+
+    Push-Location $WORKING_DIR
+    
     # Build your app with ACR build command
     $imageName = "$APP_NAME`:$APP_VERSION"
     Write-Host "Image name: $imageName"
@@ -38,4 +41,6 @@ if ($shouldBuild -eq $true) {
     if ($LastExitCode -ne 0) {
         throw "An error has occured. Unable to build image."
     }
+
+    Pop-Location
 }
