@@ -1,0 +1,50 @@
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+    branches-ignore:
+      - 'main'
+
+env:
+  issueAppName: 'issue'
+  issueAppVersion: '0.1'
+  buildEnv: 'dev'
+
+jobs:
+  build_test:
+    environment: dev
+    name: Build and run tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - id: unittest
+        name: Unit tests
+        working-directory: src/ContosoPestControl.Tests
+        run: |
+          $unitTestFilePath = "${{ env.RUNNER_TEMP }}\TestResults\unittests.xml"            
+          dotnet test --logger "junit;LogFilePath=$unitTestFilePath"
+
+      - name: Publish test \TestResults
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        with:
+          files: ${{ env.RUNNER_TEMP }}\TestResults\unittests.xml
+
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - id: build-issue
+        name: Build Issue Microservice
+        run: |
+          .\Deployment\Build.ps1 -APP_NAME ${{ env.issueAppName }} `
+            -APP_VERSION ${{ env.issueAppVersion }} `
+            -BUILD_ENV ${{ env.buildEnv }} `
+            -BUILD_PATH src/ContosoPestControl.Issue
