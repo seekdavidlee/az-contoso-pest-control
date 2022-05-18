@@ -18,9 +18,9 @@ var rgs = [
   {
     name: 'cpc-shared-services'
     tags: {
-      'stack-name': 'shared-services'
+      'stack-name': 'cpc-shared-services'
       'stack-environment': stackEnvironment
-      'stack-owner': 'platform'
+      'stack-owner': 'platform@contoso.com'
     }
     createManagedIdentity: false
     allResourcesDoNotDeleteInDev: false
@@ -28,9 +28,9 @@ var rgs = [
   {
     name: 'cpc-networking'
     tags: {
-      'stack-name': 'networking'
+      'stack-name': 'cpc-networking'
       'stack-environment': stackEnvironment
-      'stack-owner': 'networking'
+      'stack-owner': 'networking@contoso.com'
     }
     createManagedIdentity: false
     allResourcesDoNotDeleteInDev: true
@@ -38,11 +38,11 @@ var rgs = [
   {
     name: 'cpc-api'
     tags: {
-      'stack-name': 'api'
+      'stack-name': 'cpc-api'
       'stack-environment': stackEnvironment
       'stack-owner': 'devteam1@contoso.com'
     }
-    createManagedIdentity: false
+    createManagedIdentity: true
     allResourcesDoNotDeleteInDev: true
   }
 ]
@@ -191,7 +191,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           tags: {
             'stack-name': 'cpc-shared-key-vault'
             'stack-environment': stackEnvironment
-            'stack-sub-name': 'cpc-shared-services'
+            'stack-owner': 'platform@contoso.com'
           }
           properties: {
             sku: {
@@ -213,7 +213,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           tags: {
             'stack-name': 'cpc-shared-storage'
             'stack-environment': stackEnvironment
-            'stack-sub-name': 'cpc-shared-services'
+            'stack-owner': ''
           }
           sku: {
             name: 'Standard_LRS'
@@ -256,7 +256,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           tags: {
             'stack-name': 'cpc-shared-container-registry'
             'stack-environment': stackEnvironment
-            'stack-sub-name': 'cpc-shared-services'
+            'stack-owner': 'platform@contoso.com'
           }
           sku: {
             name: 'Basic'
@@ -281,7 +281,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           tags: {
             'stack-name': 'cpc-shared-configuration'
             'stack-environment': stackEnvironment
-            'stack-sub-name': 'cpc-shared-services'
+            'stack-owner': 'platform@contoso.com'
           }
           sku: {
             // Yes, it is strange that prod would be free, but since this is a demo, I like to
@@ -324,7 +324,7 @@ resource usersDefs 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-preview'
           tags: {
             'stack-name': 'cpc-identity'
             'stack-environment': stackEnvironment
-            'stack-sub-name': 'cpc-platform'
+            'stack-owner': 'platform@contoso.com'
           }
         }
       ]

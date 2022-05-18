@@ -5,8 +5,8 @@ param(
     [string]$BUILD_ENV = "dev",
     [Parameter(Mandatory = $true)][string]$SVC_PRINCIPAL_ID,
     [Parameter(Mandatory = $true)][string]$PLAT_PRINCIPAL_ID,
-    [string]$PREFIX = "cpc",
-    [string]$BP_VERSION = "1.0")
+    [string]$PREFIX = "cpc01",
+    [string]$BP_VERSION = "1.2")
 
 $ErrorActionPreference = "Stop"
 
@@ -79,6 +79,8 @@ $ids = az identity list | ConvertFrom-Json
 if ($LastExitCode -ne 0) {
     throw "An error has occured. Identity listing failed."
 }
+
+$ids = $ids | Where-Object { $_.tags.'stack-name' -eq 'cpc-identity' }
 
 $platformRes = (az resource list --tag stack-name='cpc-shared-key-vault' | ConvertFrom-Json)
 if (!$platformRes) {

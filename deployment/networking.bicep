@@ -9,7 +9,7 @@ var priNetworkPrefix = toLower('${prefix}-${primary_location}')
 var drNetworkPrefix = toLower('${prefix}-${dr_location}')
 
 var tags = {
-  'stack-name': 'networking'
+  'stack-name': 'cpc-networking'
   'stack-environment': stackEnvironment
   'stack-owner': 'networking@contoso.com'
 }

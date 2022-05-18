@@ -1,0 +1,2 @@
+# Introduction
+The fourth sprint is focused on setting up DevOps CD (Continuous Environment Deployment) to an Azure Subscription with GitHub Actions to create the Azure environment such as AKS Cluster.

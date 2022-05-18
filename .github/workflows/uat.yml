@@ -1,0 +1,48 @@
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+    branches:      
+      - 'uat'
+
+env:
+  issueAppName: 'issue'
+  issueAppVersion: '0.1'
+  buildEnv: 'dev'
+
+jobs:
+  build_test:
+    environment: dev
+    name: Build and run tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - id: resolve-shared-resources
+        name: Resolve shared resources
+        working-directory: .\deployment
+        run: |
+          .\ResolveSharedResources.ps1 -BUILD_ENV ${{ env.buildEnv }}
+
+      - name: Build App Environment
+        id: build_env
+        uses: azure/arm-deploy@v1
+        with:
+          deploymentName: "deploy-environment-${{ github.run_number }}"
+          resourceGroupName: ${{ steps.resolve-shared-resources.outputs.appResourceGroup }}
+          template: ./deployment/app.bicep
+          parameters: >            
+            location=${{ steps.resolve-shared-resources.outputs.location }}
+            keyVaultName=${{ steps.resolve-shared-resources.outputs.keyVaultName }}            
+            prefix=${{ secrets.PREFIX }}            
+            keyVaultName=${{ steps.resolve-shared-resources.outputs.keyVaultName }}
+            sharedResourceGroup=${{ steps.resolve-shared-resources.outputs.sharedResourceGroup }}            
+            subnetId=${{ steps.resolve-shared-resources.outputs.subnetId }}
+            aksMSIId=${{ steps.resolve-shared-resources.outputs.managedIdentityId }}
+            version=${{ github.run_number }}      
