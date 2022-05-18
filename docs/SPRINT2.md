@@ -21,6 +21,8 @@ We will create an Azure Blueprint to define the resource groups, role assignment
 5. Azure Blueprint will allow us to document any work we are doing in the Azure Subscription as code. This means any time we need to make a change to the Subscription, it needs to follow the process of an engineer branching off in git, making the changes, and doing a Pull Request to merge the changes into main. This means everything we do is aduited and reviewed by another engineer. Once merged into Prod, the engineer is able to execute the Azure Blueprint with the appropriate parameters. As a quick note, all changes executed with Azure Blueprint is also documented in the Auzre Subsription and we can also check there as well.
 6. From a networking perspective, we are going to leverage Network Security Groups to prevent access to our VNETs except from our office location. As such, there will be a need to configure a source IP parameter.
 
+![Architecture](/docs/Governance.png)
+
 ## Implementation
 We have decided on using Bicep as the language for creating our Azure Blueprint (VS using ARM Template which is a JSON syntax). This will make it easier for our engineers as it is much more readable. We have also decide to go with using Azure CLI for the scripting portion as it appears to be more robust with the number of Azure Services it can be used with and it has a better tooling around output format (VS Azure PowerShell). That said, we are ready with the implementations steps!
 
