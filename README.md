@@ -26,3 +26,9 @@ Working closely with the Contoso IT team, we have agreed on splitting the work i
 * [Sprint 3: Setting up DevOps CI (Continuous Integration) with Unit Testing and pushing container builds into Azure Container Registry (ACR) with GitHub Actions](docs/SPRINT3.md)
 * [Sprint 4: Setting up DevOps Part 1 CD (Continuous Environment Deployment) to an Azure Subscription with GitHub Actions to create the Azure environment such as AKS Cluster](docs/SPRINT4.md)
 * [Sprint 5: Setting up DevOps Part 2 CD (Continuous Code Deployment) to deploy microservice to Azure Kubernetes Service (AKS) cluster with GitHub Actions](docs/SPRINT5.md)
+
+### Not in scope
+We have discussed the following items that needs to be addressed but will NOT be in scope.
+* [Business continuity and disaster recovery](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/management-business-continuity-disaster-recovery)
+* Manage multiple namespaces to different development teams
+* Shifting Left in Security - Code scanning with CodeQL

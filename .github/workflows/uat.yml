@@ -4,7 +4,6 @@ on:
       - 'README.md'
     branches:      
       - 'uat'
-      - 'sprint4'
 
 env:
   issueAppName: 'issue'
@@ -46,4 +45,4 @@ jobs:
             sharedResourceGroup=${{ steps.resolve-shared-resources.outputs.sharedResourceGroup }}            
             subnetId=${{ steps.resolve-shared-resources.outputs.subnetId }}
             aksMSIId=${{ steps.resolve-shared-resources.outputs.managedIdentityId }}
-            version=${{ github.run_number }}      
+            version=${{ github.run_number }}

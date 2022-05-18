@@ -5,7 +5,6 @@ on:
     branches-ignore:
       - 'main'
       - 'uat'
-      - 'sprint4'
 
 env:
   issueAppName: 'issue'
