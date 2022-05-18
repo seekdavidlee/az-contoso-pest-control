@@ -40,7 +40,7 @@ Write-Host "::set-output name=subnetId::$subnetId"
 $appGwSubnetId = ($subnets | Where-Object { $_.name -eq "appgw" }).id
 Write-Host "::set-output name=appGwSubnetId::$appGwSubnetId"
 
-$kv = GetResource -stackName cpc-shared-key-vault -stackEnvironment prod
+$kv = GetResource -stackName cpc-shared-key-vault -stackEnvironment $BUILD_ENV
 $kvName = $kv.name
 Write-Host "::set-output name=keyVaultName::$kvName"
 $sharedResourceGroup = $kv.resourceGroup
