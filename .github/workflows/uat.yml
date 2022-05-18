@@ -4,6 +4,7 @@ on:
       - 'README.md'
     branches:      
       - 'uat'
+      - 'sprint4'
 
 env:
   issueAppName: 'issue'
