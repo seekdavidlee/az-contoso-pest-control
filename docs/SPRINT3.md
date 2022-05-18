@@ -19,3 +19,4 @@ We will now include a GitHub Action workflow that will run the unit tests as wel
 | Name | Value |
 | --- | --- |
 | AZURE_CREDENTIALS | <pre>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientSecret": "", <br/>&nbsp;&nbsp;&nbsp;&nbsp;"subscriptionId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"tenantId": "" <br/>}</pre> |
+| PREFIX | mytodos - or whatever name you would like for all your resources |

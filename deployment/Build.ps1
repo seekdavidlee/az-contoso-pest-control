@@ -1,4 +1,9 @@
-param($APP_NAME, $APP_VERSION, $BUILD_ENV, $BUILD_PATH, $WORKING_DIR)
+param(
+    [Parameter(Mandatory = $true)][string]$APP_NAME, 
+    [Parameter(Mandatory = $true)][string]$APP_VERSION, 
+    [Parameter(Mandatory = $true)][string]$BUILD_ENV, 
+    [Parameter(Mandatory = $true)][string]$BUILD_PATH, 
+    [Parameter(Mandatory = $true)][string]$WORKING_DIR)
 
 $ErrorActionPreference = "Stop"
 

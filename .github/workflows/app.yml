@@ -4,6 +4,7 @@ on:
       - 'README.md'
     branches-ignore:
       - 'main'
+      - 'uat'
 
 env:
   issueAppName: 'issue'
