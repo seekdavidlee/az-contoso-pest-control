@@ -16,9 +16,9 @@ targetScope = 'subscription'
 // All resources created by the blueprint should use this tag.
 var rgs = [
   {
-    name: 'cpc-shared-services'
+    name: '${prefix}-shared-services'
     tags: {
-      'stack-name': 'cpc-shared-services'
+      'stack-name': '${prefix}-shared-services'
       'stack-environment': stackEnvironment
       'stack-owner': 'platform@contoso.com'
     }
@@ -26,9 +26,9 @@ var rgs = [
     allResourcesDoNotDeleteInDev: false
   }
   {
-    name: 'cpc-networking'
+    name: '${prefix}-networking'
     tags: {
-      'stack-name': 'cpc-networking'
+      'stack-name': '${prefix}-networking'
       'stack-environment': stackEnvironment
       'stack-owner': 'networking@contoso.com'
     }
@@ -36,9 +36,9 @@ var rgs = [
     allResourcesDoNotDeleteInDev: true
   }
   {
-    name: 'cpc-api'
+    name: '${prefix}-api'
     tags: {
-      'stack-name': 'cpc-api'
+      'stack-name': '${prefix}-api'
       'stack-environment': stackEnvironment
       'stack-owner': 'devteam1@contoso.com'
     }
@@ -189,7 +189,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           apiVersion: '2021-11-01-preview'
           location: location
           tags: {
-            'stack-name': 'cpc-shared-key-vault'
+            'stack-name': '${prefix}-shared-key-vault'
             'stack-environment': stackEnvironment
             'stack-owner': 'platform@contoso.com'
           }
@@ -211,7 +211,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           apiVersion: '2021-02-01'
           location: location
           tags: {
-            'stack-name': 'cpc-shared-storage'
+            'stack-name': '${prefix}-shared-storage'
             'stack-environment': stackEnvironment
             'stack-owner': ''
           }
@@ -254,7 +254,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           apiVersion: '2021-06-01-preview'
           location: location
           tags: {
-            'stack-name': 'cpc-shared-container-registry'
+            'stack-name': '${prefix}-shared-container-registry'
             'stack-environment': stackEnvironment
             'stack-owner': 'platform@contoso.com'
           }
@@ -279,7 +279,7 @@ resource sharedKeyVault 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-pre
           apiVersion: '2021-10-01-preview'
           location: location
           tags: {
-            'stack-name': 'cpc-shared-configuration'
+            'stack-name': '${prefix}-shared-configuration'
             'stack-environment': stackEnvironment
             'stack-owner': 'platform@contoso.com'
           }
@@ -322,7 +322,7 @@ resource usersDefs 'Microsoft.Blueprint/blueprints/artifacts@2018-11-01-preview'
           apiVersion: '2018-11-30'
           location: location
           tags: {
-            'stack-name': 'cpc-identity'
+            'stack-name': '${prefix}-identity'
             'stack-environment': stackEnvironment
             'stack-owner': 'platform@contoso.com'
           }

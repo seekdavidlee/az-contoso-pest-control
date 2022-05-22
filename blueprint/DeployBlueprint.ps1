@@ -6,7 +6,8 @@ param(
     [Parameter(Mandatory = $true)][string]$SVC_PRINCIPAL_ID,
     [Parameter(Mandatory = $true)][string]$PLAT_PRINCIPAL_ID,
     [string]$PREFIX = "cpc01",
-    [string]$BP_VERSION = "1.2")
+    [string]$BP_VERSION = "1.3",
+    [string]$BUILD_MESSAGE)
 
 $ErrorActionPreference = "Stop"
 
@@ -17,7 +18,7 @@ if (((az extension list | ConvertFrom-Json) | Where-Object { $_.name -eq "bluepr
     }
 }
 
-$blueprintName = "cpc$BUILD_ENV"
+$blueprintName = "$PREFIX$BUILD_ENV"
 
 $subscriptionId = (az account show --query id --output tsv)
 if ($LastExitCode -ne 0) {
@@ -33,7 +34,13 @@ if ($LastExitCode -ne 0) {
     throw "An error has occured. Deployment failed."
 }
 
-$msg = (git log --oneline -n 1)
+if (!$BUILD_MESSAGE) {
+    $msg = (git log --oneline -n 1)
+}
+else {
+    $msg = $BUILD_MESSAGE
+}
+
 
 $outputs.properties.outputs.blueprints.value | ForEach-Object {
     $blueprintName = $_.name
@@ -80,9 +87,9 @@ if ($LastExitCode -ne 0) {
     throw "An error has occured. Identity listing failed."
 }
 
-$ids = $ids | Where-Object { $_.tags.'stack-name' -eq 'cpc-identity' }
+$ids = $ids | Where-Object { $_.tags.'stack-name' -eq "$PREFIX-identity" }
 
-$platformRes = (az resource list --tag stack-name='cpc-shared-key-vault' | ConvertFrom-Json)
+$platformRes = (az resource list --tag stack-name="$PREFIX-shared-key-vault" | ConvertFrom-Json)
 if (!$platformRes) {
     throw "Unable to find eligible platform resource!"
 }
